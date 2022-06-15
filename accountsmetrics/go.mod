@@ -1,4 +1,4 @@
-module github.com/rquedas/metrics-receiver/accountmetrics
+module github.com/rquedas/metrics-receiver/accountsmetrics
 
 go 1.18
 
