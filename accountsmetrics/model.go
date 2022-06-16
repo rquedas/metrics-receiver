@@ -14,10 +14,11 @@ type Atm struct{
 	StateID      string
 	SerialNumber string
 	ISPNetwork   string
+	CountryID    string
 }
 
 func generateAtm() Atm{
-	i := getRandomNumber(1, 2)
+	i := getRandomNumber(1, 6)
     var newAtm Atm
 
 	switch i {
@@ -29,6 +30,7 @@ func generateAtm() Atm{
 				Version: "v1.0",
 				ISPNetwork: "comcast-chicago",
 				StateID: "IL",
+				CountryID: "USA",
 		
 			}
 		
@@ -40,7 +42,57 @@ func generateAtm() Atm{
 				Version: "v1.0",
 				ISPNetwork: "comcast-sanfrancisco",
 				StateID: "CA",
+				CountryID: "USA",
 			}
+
+		case 3:
+			newAtm = Atm{
+				ID: 333,
+				Name: "ATM-333-IL",
+				SerialNumber: "atmxph-2022-333",
+				Version: "v1.0",
+				ISPNetwork: "comcast-chicago",
+				StateID: "IL",
+				CountryID: "USA",
+		
+			}
+		
+		case 4:
+			newAtm = Atm{
+				ID: 444,
+				Name: "ATM-444-CA",
+				SerialNumber: "atmxph-2022-444",
+				Version: "v1.0",
+				ISPNetwork: "att-sandiego",
+				StateID: "CA",
+				CountryID: "USA",
+			}
+
+		case 5:
+			newAtm = Atm{
+				ID: 555,
+				Name: "ATM-555-SP",
+				SerialNumber: "atmxph-2022-555",
+				Version: "v1.0",
+				ISPNetwork: "claro-saopaulo",
+				StateID: "SP",
+				CountryID: "BRAZIL",
+		
+			}
+		
+		case 6:
+			newAtm = Atm{
+				ID: 666,
+				Name: "ATM-666-RJ",
+				SerialNumber: "atmxph-2022-666",
+				Version: "v1.0",
+				ISPNetwork: "oi-rio",
+				StateID: "RJ",
+				CountryID: "BRAZIL",
+			}
+
+
+
 	}
 
 	return newAtm
@@ -68,6 +120,7 @@ func generateMetrics() pmetric.Metrics{
 	scopeMetrics.Scope().SetVersion("1.0")
 
 	mFastCashValue := scopeMetrics.Metrics().AppendEmpty()
+	fillMetricWithData(&mFastCashValue)
     addDataPointToMetric(&mFastCashValue, atm.Name)
 
 	return metrics

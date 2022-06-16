@@ -20,12 +20,12 @@ type accountsmetricsreceiver struct {
 
 var startTime pcommon.Timestamp
 
-func (tailtracerRcvr *accountsmetricsreceiver) Start(ctx context.Context, host component.Host) error {
-    tailtracerRcvr.host = host
+func (acntsMtrcRcvr *accountsmetricsreceiver) Start(ctx context.Context, host component.Host) error {
+    acntsMtrcRcvr.host = host
     ctx = context.Background()
-	ctx, tailtracerRcvr.cancel = context.WithCancel(ctx)
+	ctx, acntsMtrcRcvr.cancel = context.WithCancel(ctx)
  
-	interval, _ := time.ParseDuration(tailtracerRcvr.config.Interval)
+	interval, _ := time.ParseDuration(acntsMtrcRcvr.config.Interval)
 	startTime = pcommon.NewTimestampFromTime(time.Now())
 	go func() {
 		ticker := time.NewTicker(interval)
@@ -33,8 +33,8 @@ func (tailtracerRcvr *accountsmetricsreceiver) Start(ctx context.Context, host c
 		for {
 			select {
 			case <-ticker.C:
-				tailtracerRcvr.logger.Info("I should start processing metrics now!")
-				tailtracerRcvr.nextConsumer.ConsumeMetrics(ctx, generateMetrics())
+				acntsMtrcRcvr.logger.Info("I should start processing metrics now!")
+				acntsMtrcRcvr.nextConsumer.ConsumeMetrics(ctx, generateMetrics())
 			case <-ctx.Done():
 				return
 			}
@@ -44,8 +44,8 @@ func (tailtracerRcvr *accountsmetricsreceiver) Start(ctx context.Context, host c
 	return nil
 }
 
-func (tailtracerRcvr *accountsmetricsreceiver) Shutdown(ctx context.Context) error {
-	tailtracerRcvr.cancel()
-	tailtracerRcvr.logger.Info("I am done and ready to shutdown!")
+func (acntsMtrcRcvr *accountsmetricsreceiver) Shutdown(ctx context.Context) error {
+	acntsMtrcRcvr.cancel()
+	acntsMtrcRcvr.logger.Info("I am done and ready to shutdown!")
 	return nil
 }

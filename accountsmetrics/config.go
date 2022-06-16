@@ -18,8 +18,8 @@ type Config struct {
 func (cfg *Config) Validate() error {
 
     interval, _ := time.ParseDuration(cfg.Interval)
-	if (interval.Minutes() < 1){
-		return fmt.Errorf("when defined, the interval has to be set to at least 1 minute")
+	if (interval.Seconds() < 10){
+		return fmt.Errorf("when defined, the interval has to be set to at least 10 seconds")
 	 }
  
 	return nil
