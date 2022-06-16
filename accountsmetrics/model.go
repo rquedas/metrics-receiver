@@ -121,18 +121,19 @@ func generateMetrics() pmetric.Metrics{
 
 	mFastCashValue := scopeMetrics.Metrics().AppendEmpty()
 	fillMetricWithData(&mFastCashValue)
-    addDataPointToMetric(&mFastCashValue, atm.Name)
+    addDataPointToMetric(&mFastCashValue, atm.Name, atm.CountryID)
 
 	return metrics
 }
 
-func addDataPointToMetric(metric *pmetric.Metric, atmNameAttributeValue string) {
+func addDataPointToMetric(metric *pmetric.Metric, atmNameAttributeValue string, atmCountryAttributeValue string) {
 	dp := metric.Sum().DataPoints().AppendEmpty()
 	dp.SetStartTimestamp(startTime)
 	dp.SetTimestamp(pcommon.NewTimestampFromTime(time.Now()))
 	metricValue := 1000 * getRandomNumber(1, 5)
 	dp.SetDoubleVal(float64(metricValue))
 	dp.Attributes().Insert("atm-name", pcommon.NewValueString(atmNameAttributeValue))
+	dp.Attributes().Insert("atm-country", pcommon.NewValueString(atmCountryAttributeValue))
 }
 
 func fillResourceWithAtm(resource pcommon.Resource, atm Atm){
@@ -141,6 +142,7 @@ func fillResourceWithAtm(resource pcommon.Resource, atm Atm){
 	atmAttrs.InsertString("atm.stateid", atm.StateID)
 	atmAttrs.InsertString("atm.ispnetwork", atm.ISPNetwork)
 	atmAttrs.InsertString("atm.serialnumber", atm.SerialNumber) 
+	atmAttrs.InsertString("atm.country", atm.CountryID) 
  }
 
 
