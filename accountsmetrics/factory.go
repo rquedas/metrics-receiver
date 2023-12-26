@@ -27,13 +27,13 @@ func createMetricsReceiver(_ context.Context, params receiver.CreateSettings, ba
 	logger := params.Logger
 	accountsReceiverCfg := baseCfg.(*Config)
 
-	atmMetricsRcvr := &accountsmetricsreceiver{
+	accountsMetricsRcvr := &accountsmetricsreceiver{
 		logger:       logger,
 		nextConsumer: consumer,
 		config:       accountsReceiverCfg,
 	}
 
-	return atmMetricsRcvr, nil
+	return accountsMetricsRcvr, nil
 
 }
 
