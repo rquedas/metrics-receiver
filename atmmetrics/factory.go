@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer"
+	receiver "go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/receiver/scraperhelper"
 )
 
@@ -14,24 +14,20 @@ const (
 	typeStr = "atmmetrics"
 )
 
-func createDefaultConfig() config.Receiver {
+func createDefaultConfig() component.Config {
 	scs := scraperhelper.NewDefaultScraperControllerSettings(typeStr)
-	scs.CollectionInterval = 10 * time.Second
+	scs.CollectionInterval = 30 * time.Second
 	defaultMetrics := DefaultMetricsSettings()
-
 
 	return &Config{
 		ScraperControllerSettings: scs,
-		Metrics: defaultMetrics,
+		Metrics:                   defaultMetrics,
 	}
 }
 
 func DefaultMetricsSettings() TransactionMetricsSettings {
 	return TransactionMetricsSettings{
-		FastCashTotal: MetricSettings{
-			Enabled: true,
-		},
-		FastCashAverage: MetricSettings{
+		FastCashCounter: MetricSettings{
 			Enabled: true,
 		},
 	}
@@ -39,24 +35,25 @@ func DefaultMetricsSettings() TransactionMetricsSettings {
 
 func createMetricsScraperReceiver(
 	ctx context.Context,
-	params component.ReceiverCreateSettings,
-	config config.Receiver,
+	params receiver.CreateSettings,
+	config component.Config,
 	consumer consumer.Metrics,
-) (component.MetricsReceiver, error) {
-	atmConfig := config.(*Config)
+) (receiver.Metrics, error) {
+	// atmConfig := config.(*Config)
 
-	dsr, err := NewReceiver(ctx, params, atmConfig, consumer)
-	if err != nil {
-		return nil, err
-	}
+	// dsr, err := NewReceiver(ctx, params, atmConfig, consumer)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return dsr, nil
+	// return dsr, nil
+	return nil, nil
 }
 
 // NewFactory creates a factory for tailtracer receiver.
-func NewFactory() component.ReceiverFactory {
-	return component.NewReceiverFactory(
+func NewFactory() receiver.Factory {
+	return receiver.NewFactory(
 		typeStr,
 		createDefaultConfig,
-		component.WithMetricsReceiver(createMetricsScraperReceiver))
+		receiver.WithMetrics(createMetricsScraperReceiver, component.StabilityLevelStable))
 }

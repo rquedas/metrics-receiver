@@ -4,44 +4,43 @@ import (
 	"context"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer"
+	receiver "go.opentelemetry.io/collector/receiver"
 )
 
 const (
-	typeStr = "accountsmetrics"
+	typeStr         = "accountsmetrics"
 	defaultInterval = "1m"
 )
 
-func createDefaultConfig() config.Receiver {
+func createDefaultConfig() component.Config {
 	return &Config{
-		ReceiverSettings:   config.NewReceiverSettings(config.NewComponentID(typeStr)),
 		Interval: defaultInterval,
 	}
 }
 
-func createMetricsReceiver(_ context.Context, params component.ReceiverCreateSettings, baseCfg config.Receiver, consumer consumer.Metrics) (component.MetricsReceiver, error) {
+func createMetricsReceiver(_ context.Context, params receiver.CreateSettings, baseCfg component.Config, consumer consumer.Metrics) (receiver.Metrics, error) {
 	if consumer == nil {
 		return nil, component.ErrNilNextConsumer
 	}
-	
-	logger := params.Logger
-	tailtracerCfg := baseCfg.(*Config)
 
-	traceRcvr := &accountsmetricsreceiver{
+	logger := params.Logger
+	accountsReceiverCfg := baseCfg.(*Config)
+
+	atmMetricsRcvr := &accountsmetricsreceiver{
 		logger:       logger,
 		nextConsumer: consumer,
-		config:       tailtracerCfg,
+		config:       accountsReceiverCfg,
 	}
-	
-	return traceRcvr, nil
+
+	return atmMetricsRcvr, nil
 
 }
 
 // NewFactory creates a factory for tailtracer receiver.
-func NewFactory() component.ReceiverFactory {
-	return component.NewReceiverFactory(
+func NewFactory() receiver.Factory {
+	return receiver.NewFactory(
 		typeStr,
 		createDefaultConfig,
-		component.WithMetricsReceiver(createMetricsReceiver))
+		receiver.WithMetrics(createMetricsReceiver, component.StabilityLevelStable))
 }
