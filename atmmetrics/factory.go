@@ -39,15 +39,14 @@ func createMetricsScraperReceiver(
 	config component.Config,
 	consumer consumer.Metrics,
 ) (receiver.Metrics, error) {
-	// atmConfig := config.(*Config)
+	atmConfig := config.(*Config)
 
-	// dsr, err := NewReceiver(ctx, params, atmConfig, consumer)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	dsr, err := NewReceiver(ctx, params, atmConfig, consumer)
+	if err != nil {
+		return nil, err
+	}
 
-	// return dsr, nil
-	return nil, nil
+	return dsr, nil
 }
 
 // NewFactory creates a factory for tailtracer receiver.
